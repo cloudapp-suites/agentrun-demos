@@ -23,7 +23,7 @@
 | `plugin/tools/execute_code.yaml` | 工具参数定义，注意 `form: form` 的选择 |
 | `plugin/tools/execute_code.py` | 核心实现：参数解析 → 创建沙箱 → 执行代码 → 返回结果 |
 | `plugin/provider/e2b_sandbox.py` | 凭证验证逻辑 |
-| `plugin/e2b/sandbox_sync/main.py` | 内嵌 E2B SDK 的 Sandbox.create() 入口 |
+| `plugin/e2b/sandbox_sync/main.py` | E2B SDK 的 Sandbox.create() 入口（解压 e2b-sdk.tar.gz 后查看） |
 
 ## 架构
 
@@ -55,6 +55,7 @@ dify-e2b-integration/
 │   │   └── list_files.yaml/.py    #     列出文件
 │   ├── e2b-sdk.tar.gz              #   E2B Python SDK 压缩包（由 build.sh 解压）
 │   └── e2b_connect/               #   （由 build.sh 解压）
+├── build.sh                       # 一键构建脚本（解压 SDK + 打包）
 ├── deploy/                        # 部署辅助
 │   ├── e2b-sandbox.difypkg        #   预打包的插件文件
 │   ├── install.sh                 #   Dify Helm 部署脚本
@@ -88,7 +89,7 @@ brew tap langgenius/dify && brew install dify
 bash build.sh
 ```
 
-> `e2b/` 和 `e2b_connect/` 由 `setup-sdk.sh` 从 [E2B 官方仓库](https://github.com/e2b-dev/E2B) 拉取，不入库。
+> `e2b/` 和 `e2b_connect/` 由 `build.sh` 从 `e2b-sdk.tar.gz` 解压，不入库。
 
 ### 2. 配置凭证
 
