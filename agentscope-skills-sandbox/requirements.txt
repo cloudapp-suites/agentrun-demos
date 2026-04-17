@@ -1,23 +1,23 @@
 # AgentScope Skills Sandbox Demo 依赖
 
 # 核心框架
-agentscope>=1.0.13
+agentscope==1.0.13
 
 # AgentScope Runtime — web 服务层（AgentApp、Runner、协议适配器、沙箱 SDK 等）
-agentscope-runtime>=1.1.0
+agentscope-runtime==1.1.0
 
 # MCP 协议支持（streamable-HTTP / SSE 客户端）
-mcp>=1.26.0
+mcp==1.26.0
 
 # HTTP 客户端（MCP 传输层依赖）
-httpx>=0.27.0
+httpx==0.27.0
 
 # SKILL.md front matter 解析
-python-frontmatter>=1.1.0
+python-frontmatter==1.1.0
 
 # Web 服务依赖（AgentApp 内部使用）
-uvicorn>=0.29.0
-fastapi>=0.110.0
+uvicorn==0.29.0
+fastapi==0.110.0
 
 # 交互式命令行（CLI 模式使用）
-prompt-toolkit>=3.0.0
+prompt-toolkit==3.0.0

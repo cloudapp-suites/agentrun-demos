@@ -1,4 +1,4 @@
-agentscope>=1.0.13
-agentscope-runtime>=1.1.0
-uvicorn>=0.29.0
-fastapi>=0.110.0
+agentscope==1.0.13
+agentscope-runtime==1.1.0
+uvicorn==0.29.0
+fastapi==0.110.0
