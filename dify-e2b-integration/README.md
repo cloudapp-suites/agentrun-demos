@@ -53,8 +53,10 @@ dify-e2b-integration/
 │   │   ├── write_file.yaml/.py    #     写文件
 │   │   ├── read_file.yaml/.py     #     读文件
 │   │   └── list_files.yaml/.py    #     列出文件
-│   ├── e2b/                       #   内嵌 E2B Python SDK（支持自定义 api_url）
-│   └── e2b_connect/               #   Connect RPC 客户端
+│   ├── e2b/                       #   E2B Python SDK（由 setup-sdk.sh 生成，不入库）
+│   ├── e2b_connect/               #   Connect RPC 客户端（由 setup-sdk.sh 生成）
+│   ├── setup-sdk.sh               #   拉取 E2B SDK 脚本
+│   └── .gitignore
 ├── deploy/                        # 部署辅助
 │   ├── e2b-sandbox.difypkg        #   预打包的插件文件
 │   ├── install.sh                 #   Dify Helm 部署脚本
@@ -84,10 +86,15 @@ ls deploy/e2b-sandbox.difypkg
 # 安装 Dify CLI
 brew tap langgenius/dify && brew install dify
 
+# 拉取 E2B SDK（首次或更新时执行）
+cd plugin && bash setup-sdk.sh && cd ..
+
 # 打包
 dify plugin package plugin/
 # 生成 plugin.difypkg，上传到 Dify 安装
 ```
+
+> `e2b/` 和 `e2b_connect/` 由 `setup-sdk.sh` 从 [E2B 官方仓库](https://github.com/e2b-dev/E2B) 拉取，不入库。
 
 ### 2. 配置凭证
 
