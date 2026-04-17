@@ -38,7 +38,7 @@
 
 ## 4. 依赖版本
 
-- **Python（requirements.txt）**：所有依赖必须指定最低版本，如 `agentscope>=1.0.13`，禁止无版本约束的裸包名
+- **Python（requirements.txt）**：所有依赖使用 `==` 固定版本，如 `agentscope==1.0.13`
 - **Node.js（package.json）**：使用 `^` 范围版本，并将 `package-lock.json` 一并入库
 
 ---
