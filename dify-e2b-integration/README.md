@@ -57,6 +57,7 @@ dify-e2b-integration/
 │   ├── e2b_connect/               #   Connect RPC 客户端（由 setup-sdk.sh 生成）
 │   ├── setup-sdk.sh               #   拉取 E2B SDK 脚本
 │   └── .gitignore
+├── build.sh                       # 一键构建脚本（拉取 SDK + 打包）
 ├── deploy/                        # 部署辅助
 │   ├── e2b-sandbox.difypkg        #   预打包的插件文件
 │   ├── install.sh                 #   Dify Helm 部署脚本
@@ -86,12 +87,12 @@ ls deploy/e2b-sandbox.difypkg
 # 安装 Dify CLI
 brew tap langgenius/dify && brew install dify
 
-# 拉取 E2B SDK（首次或更新时执行）
-cd plugin && bash setup-sdk.sh && cd ..
+# 一键构建（拉取 SDK + 打包）
+bash build.sh
 
-# 打包
+# 或手动分步：
+cd plugin && bash setup-sdk.sh && cd ..
 dify plugin package plugin/
-# 生成 plugin.difypkg，上传到 Dify 安装
 ```
 
 > `e2b/` 和 `e2b_connect/` 由 `setup-sdk.sh` 从 [E2B 官方仓库](https://github.com/e2b-dev/E2B) 拉取，不入库。
