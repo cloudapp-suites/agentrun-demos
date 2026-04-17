@@ -347,3 +347,14 @@ agent = ReActAgent(
 |------|------|------|
 | `SANDBOX_MANAGER_URL` | 是 | 集群沙箱管理器地址（可从集群详情页获取） |
 | `SANDBOX_MANAGER_TOKEN` | 否 | 集群沙箱管理器访问凭证（可从集群详情页获取） |
+
+---
+
+## 完整 Demo
+
+- [agentscope-mcp](https://github.com/cloudapp-suites/agentrun-demos/tree/main/agentscope-mcp) — AgentScope ReActAgent + 多远程 MCP 工具 AI 助手
+- [agentscope-skills-sandbox](https://github.com/cloudapp-suites/agentrun-demos/tree/main/agentscope-skills-sandbox) — AgentScope + Agent Skills + All-in-One 沙箱集成
+
+## 打包部署
+
+如需将应用打包为离线压缩包通过管控台上传部署，请参考 [pack-tools](https://github.com/cloudapp-suites/agentrun-demos/tree/main/pack-tools)。

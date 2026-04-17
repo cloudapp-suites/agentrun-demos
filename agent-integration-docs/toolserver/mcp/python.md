@@ -125,3 +125,11 @@ asyncio.run(main())
 - **非沙箱工具（共享模式）**：非必须，但携带后有利于会话亲和与日志追踪
 
 建议在客户端生成随机 UUID 并在整个会话期间复用。
+
+---
+
+## 完整 Demo
+
+- [react-with-sandbox-by-native-mcp](https://github.com/cloudapp-suites/agentrun-demos/tree/main/react-with-sandbox-by-native-mcp) — ReActAgent 通过原生 MCP 协议连接远程沙箱
+- [mcp-client-sample](https://github.com/cloudapp-suites/agentrun-demos/tree/main/mcp-client-sample) — MCP Python SDK 示例客户端
+- [code-execution-mcp](https://github.com/cloudapp-suites/agentrun-demos/tree/main/code-execution-mcp) — 基于 MCP 协议的多语言代码执行 ToolServer

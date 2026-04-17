@@ -314,3 +314,13 @@ if __name__ == "__main__":
 | `OPENAI_API_KEY` | 是 | OpenAI API Key（或 DashScope API Key） |
 | `OPENAI_BASE_URL` | 否 | OpenAI 兼容 API 地址，如 `https://dashscope.aliyuncs.com/compatible-mode/v1` |
 | `OPENAI_MODEL` | 否 | 模型名称，默认 `qwen3.5-plus` |
+
+---
+
+## 完整 Demo
+
+- [langgraph-sandbox-example](https://github.com/cloudapp-suites/agentrun-demos/tree/main/langgraph-sandbox-example) — LangGraph + 沙箱集成完整示例
+
+## 打包部署
+
+如需将应用打包为离线压缩包通过管控台上传部署，请参考 [pack-tools](https://github.com/cloudapp-suites/agentrun-demos/tree/main/pack-tools)。

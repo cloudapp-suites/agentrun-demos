@@ -145,3 +145,9 @@ SANDBOX_BACKEND=agentscope
 > 集群内部署时，URL 变量通常使用默认值即可，只需配置 Token。
 
 ---
+
+## 完整 Demo
+
+- [openclaw-unified-sandbox](https://github.com/cloudapp-suites/agentrun-demos/tree/main/openclaw-unified-sandbox) — OpenClaw + 统一沙箱后端（E2B / AgentScope 运行时切换）
+- [openclaw-agentscope-integration](https://github.com/cloudapp-suites/agentrun-demos/tree/main/openclaw-agentscope-integration) — OpenClaw + AgentScope 沙箱集成
+- [openclaw-e2b-integration](https://github.com/cloudapp-suites/agentrun-demos/tree/main/openclaw-e2b-integration) — OpenClaw + E2B 沙箱集成
