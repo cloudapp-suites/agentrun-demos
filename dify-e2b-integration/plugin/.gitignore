@@ -1,0 +1,6 @@
+# 由 build.sh 从 e2b-sdk.tar.gz 解压生成
+e2b/
+e2b_connect/
+__pycache__/
+*.pyc
+.env
