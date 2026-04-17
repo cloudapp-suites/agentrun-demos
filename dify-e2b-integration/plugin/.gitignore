@@ -1,6 +1,0 @@
-# E2B SDK（由 setup-sdk.sh 生成，不入库）
-e2b/
-e2b_connect/
-__pycache__/
-*.pyc
-.env
