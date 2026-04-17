@@ -27,6 +27,7 @@
 | [openclaw-agentscope-integration](openclaw-agentscope-integration/) | OpenClaw + AgentScope 沙箱集成 |
 | [openclaw-e2b-integration](openclaw-e2b-integration/) | OpenClaw + E2B 沙箱集成 |
 | [copaw-unified-sandbox](copaw-unified-sandbox/) | CoPaw + 统一沙箱后端（E2B / AgentScope 运行时切换） |
+| [dify-e2b-integration](dify-e2b-integration/) | Dify + E2B 沙箱集成（Dify 插件方式） |
 
 ### 工具与文档
 
@@ -46,7 +47,6 @@
 | - | 多 MCP Server 编排 | 🚧 TODO |
 | - | 会话持久化与恢复 | 🚧 TODO |
 | - | Agent 可观测性 | 🚧 TODO |
-| - | Dify 集成 | 🚧 TODO |
 
 ## 学习地图
 

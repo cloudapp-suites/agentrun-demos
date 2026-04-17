@@ -1,0 +1,67 @@
+identity:
+  author: e2b-self-hosted
+  name: e2b_sandbox
+  label:
+    en_US: E2B Sandbox
+    zh_Hans: E2B 沙箱
+  description:
+    en_US: Execute code in self-hosted E2B sandbox
+    zh_Hans: 在自建 E2B 沙箱中执行代码
+  icon: icon.svg
+  tags:
+    - utilities
+credentials_for_provider:
+  api_url:
+    type: text-input
+    required: true
+    label:
+      en_US: Sandbox Manager API URL
+      zh_Hans: Sandbox Manager API 地址
+    placeholder:
+      en_US: "http://sandbox-manager-slb-service.default:80/e2b"
+      zh_Hans: "http://sandbox-manager-slb-service.default:80/e2b"
+    help:
+      en_US: "Control plane URL of sandbox-manager (E2B compatible API)"
+      zh_Hans: "sandbox-manager 管控面地址（E2B 兼容 API）"
+  sandbox_url:
+    type: text-input
+    required: true
+    label:
+      en_US: Sandbox Data Plane URL
+      zh_Hans: 沙箱数据面地址
+    placeholder:
+      en_US: "http://sandbox-manager-slb-service.default:80"
+      zh_Hans: "http://sandbox-manager-slb-service.default:80"
+    help:
+      en_US: "Data plane URL for Connect RPC / file operations"
+      zh_Hans: "数据面地址，用于 Connect RPC / 文件操作"
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: API Key
+      zh_Hans: API 密钥
+    placeholder:
+      en_US: "e2b_xxx or bearer token"
+      zh_Hans: "e2b_xxx 或 bearer token"
+  default_template:
+    type: text-input
+    required: false
+    label:
+      en_US: Default Template ID
+      zh_Hans: 默认模板 ID
+    placeholder:
+      en_US: "base"
+      zh_Hans: "base"
+    help:
+      en_US: "Template to use when creating sandboxes, defaults to 'base'"
+      zh_Hans: "创建沙箱时使用的模板，默认 'base'"
+tools:
+  - tools/execute_code.yaml
+  - tools/run_command.yaml
+  - tools/write_file.yaml
+  - tools/read_file.yaml
+  - tools/list_files.yaml
+extra:
+  python:
+    source: provider/e2b_sandbox.py
