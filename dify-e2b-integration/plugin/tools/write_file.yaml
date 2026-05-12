@@ -1,0 +1,50 @@
+identity:
+  name: write_file
+  author: e2b-self-hosted
+  label:
+    en_US: Write File
+    zh_Hans: 写入文件
+description:
+  human:
+    en_US: Write content to a file in the E2B sandbox.
+    zh_Hans: 在 E2B 沙箱中写入文件。
+  llm: Write content to a file in the sandbox. Creates the file if it doesn't exist, overwrites if it does.
+parameters:
+  - name: path
+    type: string
+    required: true
+    label:
+      en_US: File Path
+      zh_Hans: 文件路径
+    human_description:
+      en_US: Path of the file to write
+      zh_Hans: 要写入的文件路径
+    llm_description: Absolute path of the file to write in the sandbox, e.g. /home/user/hello.py
+    form: llm
+  - name: content
+    type: string
+    required: true
+    label:
+      en_US: Content
+      zh_Hans: 文件内容
+    human_description:
+      en_US: Content to write to the file
+      zh_Hans: 要写入的文件内容
+    llm_description: The text content to write into the file
+    form: llm
+  - name: timeout
+    type: number
+    required: false
+    label:
+      en_US: Timeout (seconds)
+      zh_Hans: 超时时间（秒）
+    human_description:
+      en_US: Sandbox timeout in seconds
+      zh_Hans: 沙箱超时时间（秒）
+    form: form
+    default: 300
+    min: 10
+    max: 3600
+extra:
+  python:
+    source: tools/write_file.py

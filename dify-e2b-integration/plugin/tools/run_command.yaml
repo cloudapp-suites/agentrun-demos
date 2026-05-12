@@ -1,0 +1,49 @@
+identity:
+  name: run_command
+  author: e2b-self-hosted
+  label:
+    en_US: Run Command
+    zh_Hans: 执行命令
+description:
+  human:
+    en_US: Run a shell command in an isolated E2B sandbox.
+    zh_Hans: 在隔离的 E2B 沙箱中执行 Shell 命令。
+  llm: Run a shell command in a secure E2B sandbox. Returns stdout, stderr, and exit code.
+parameters:
+  - name: command
+    type: string
+    required: true
+    label:
+      en_US: Command
+      zh_Hans: 命令
+    human_description:
+      en_US: Shell command to execute
+      zh_Hans: 要执行的 Shell 命令
+    llm_description: The shell command to run in the sandbox
+    form: llm
+  - name: timeout
+    type: number
+    required: false
+    label:
+      en_US: Timeout (seconds)
+      zh_Hans: 超时时间（秒）
+    human_description:
+      en_US: Sandbox timeout in seconds
+      zh_Hans: 沙箱超时时间（秒）
+    form: form
+    default: 300
+    min: 10
+    max: 3600
+  - name: template_id
+    type: string
+    required: false
+    label:
+      en_US: Template ID
+      zh_Hans: 模板 ID
+    human_description:
+      en_US: Override the default template for this execution
+      zh_Hans: 覆盖默认模板
+    form: form
+extra:
+  python:
+    source: tools/run_command.py

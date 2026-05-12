@@ -1,0 +1,39 @@
+identity:
+  name: list_files
+  author: e2b-self-hosted
+  label:
+    en_US: List Files
+    zh_Hans: 列出文件
+description:
+  human:
+    en_US: List files in a directory in the E2B sandbox.
+    zh_Hans: 列出 E2B 沙箱中目录的文件。
+  llm: List files and directories in a given path in the sandbox.
+parameters:
+  - name: path
+    type: string
+    required: true
+    label:
+      en_US: Directory Path
+      zh_Hans: 目录路径
+    human_description:
+      en_US: Path of the directory to list
+      zh_Hans: 要列出的目录路径
+    llm_description: Absolute path of the directory to list, e.g. /home/user
+    form: llm
+  - name: timeout
+    type: number
+    required: false
+    label:
+      en_US: Timeout (seconds)
+      zh_Hans: 超时时间（秒）
+    human_description:
+      en_US: Sandbox timeout in seconds
+      zh_Hans: 沙箱超时时间（秒）
+    form: form
+    default: 300
+    min: 10
+    max: 3600
+extra:
+  python:
+    source: tools/list_files.py

@@ -1,0 +1,71 @@
+identity:
+  name: execute_code
+  author: e2b-self-hosted
+  label:
+    en_US: Execute Code
+    zh_Hans: 执行代码
+description:
+  human:
+    en_US: Execute code in an isolated E2B sandbox and return the output.
+    zh_Hans: 在隔离的 E2B 沙箱中执行代码并返回输出。
+  llm: Execute code (Python, JavaScript, Shell, etc.) in a secure E2B sandbox. Returns stdout, stderr, and exit status.
+parameters:
+  - name: code
+    type: string
+    required: false
+    label:
+      en_US: Code
+      zh_Hans: 代码
+    human_description:
+      en_US: The code to execute in the sandbox
+      zh_Hans: 要在沙箱中执行的代码
+    llm_description: The source code to execute in the sandbox environment
+    form: form
+  - name: language
+    type: select
+    required: false
+    label:
+      en_US: Language
+      zh_Hans: 编程语言
+    human_description:
+      en_US: Programming language of the code
+      zh_Hans: 代码的编程语言
+    llm_description: Programming language, determines how the code is executed
+    form: form
+    default: python
+    options:
+      - value: python
+        label:
+          en_US: Python
+      - value: javascript
+        label:
+          en_US: JavaScript
+      - value: shell
+        label:
+          en_US: Shell
+  - name: timeout
+    type: number
+    required: false
+    label:
+      en_US: Timeout (seconds)
+      zh_Hans: 超时时间（秒）
+    human_description:
+      en_US: Sandbox timeout in seconds
+      zh_Hans: 沙箱超时时间（秒）
+    form: form
+    default: 300
+    min: 10
+    max: 3600
+  - name: template_id
+    type: string
+    required: false
+    label:
+      en_US: Template ID
+      zh_Hans: 模板 ID
+    human_description:
+      en_US: Override the default template for this execution
+      zh_Hans: 覆盖默认模板
+    form: form
+extra:
+  python:
+    source: tools/execute_code.py

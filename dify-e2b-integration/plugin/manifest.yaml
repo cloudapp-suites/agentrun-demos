@@ -1,0 +1,32 @@
+version: 0.0.1
+type: plugin
+author: "e2b-self-hosted"
+name: "e2b-sandbox"
+label:
+  en_US: "E2B Sandbox"
+  zh_Hans: "E2B 沙箱"
+description:
+  en_US: "Execute code in self-hosted E2B sandbox via sandbox-manager"
+  zh_Hans: "在自建 E2B 沙箱中执行代码（通过 sandbox-manager）"
+icon: "icon.svg"
+created_at: "2026-04-02T00:00:00Z"
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+    storage:
+      enabled: true
+      size: 1048576
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: "main"
+plugins:
+  tools:
+    - "provider/e2b_sandbox.yaml"

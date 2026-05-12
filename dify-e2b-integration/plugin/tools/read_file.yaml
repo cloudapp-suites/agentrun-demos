@@ -1,0 +1,39 @@
+identity:
+  name: read_file
+  author: e2b-self-hosted
+  label:
+    en_US: Read File
+    zh_Hans: 读取文件
+description:
+  human:
+    en_US: Read content from a file in the E2B sandbox.
+    zh_Hans: 从 E2B 沙箱中读取文件内容。
+  llm: Read the content of a file in the sandbox. Returns the file content as text.
+parameters:
+  - name: path
+    type: string
+    required: true
+    label:
+      en_US: File Path
+      zh_Hans: 文件路径
+    human_description:
+      en_US: Path of the file to read
+      zh_Hans: 要读取的文件路径
+    llm_description: Absolute path of the file to read in the sandbox, e.g. /home/user/output.txt
+    form: llm
+  - name: timeout
+    type: number
+    required: false
+    label:
+      en_US: Timeout (seconds)
+      zh_Hans: 超时时间（秒）
+    human_description:
+      en_US: Sandbox timeout in seconds
+      zh_Hans: 沙箱超时时间（秒）
+    form: form
+    default: 300
+    min: 10
+    max: 3600
+extra:
+  python:
+    source: tools/read_file.py
