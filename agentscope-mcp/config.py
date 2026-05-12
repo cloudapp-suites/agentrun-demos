@@ -43,7 +43,7 @@ class MCPServerConfig:
         name:        服务的唯一标识名称，用于日志和区分。
         url:         MCP 服务端点 URL，streamable-HTTP 协议端点默认路径为
                      ``/``，SSE 协议端点通常以 ``/sse`` 结尾。
-        token:       访问凭证，以 ``Authorization: bearer <token>`` 形式
+        token:       访问凭证，以 ``Authorization: Bearer <token>`` 形式
                      附加到每次请求头中。留空则不添加鉴权头。
         transport:   传输协议，可选 ``streamable_http`` 或 ``sse``。
                      默认 ``streamable_http``。

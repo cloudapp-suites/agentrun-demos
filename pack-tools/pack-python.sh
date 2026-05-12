@@ -112,8 +112,6 @@ case "${TARGET_ARCH}" in
         ;;
 esac
 
-PYTHON_VERSION="$(python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')"
-
 TIMESTAMP="$(date +%Y%m%d%H%M%S)"
 PACKAGE_NAME="${APP_NAME}-${TIMESTAMP}"
 TMP_DIR="/tmp/${PACKAGE_NAME}"
@@ -273,22 +271,63 @@ read -r user_entry_input
 echo "    使用命令: python ${ENTRY_CMD}"
 
 # ---------------------------------------------------------------------------
-# 交互 4：确认 / 修改 Docker 镜像（仅用于构建下载依赖，不是运行时镜像）
+# 交互 4：选择 Python 版本
 # ---------------------------------------------------------------------------
-DEFAULT_IMAGE="apaas-registry.cn-hangzhou.cr.aliyuncs.com/agentrun/python:${PYTHON_VERSION}-slim_${TARGET_ARCH}"
+echo ""
+echo "── Python 版本 ─────────────────────────────────────"
+echo "  1) 3.10"
+echo "  2) 3.12（默认）"
+echo "  3) 3.13"
+echo "  4) 其它（需手动指定 Docker 镜像）"
+echo "────────────────────────────────────────────────────"
+printf "请选择 [1/2/3/4]（默认 2）: "
+read -r user_py_choice
+
+case "${user_py_choice}" in
+    1) PYTHON_VERSION="3.10"; CUSTOM_IMAGE=false ;;
+    3) PYTHON_VERSION="3.13"; CUSTOM_IMAGE=false ;;
+    4) PYTHON_VERSION="";     CUSTOM_IMAGE=true  ;;
+    *) PYTHON_VERSION="3.12"; CUSTOM_IMAGE=false ;;
+esac
+
+if ${CUSTOM_IMAGE}; then
+    echo "    已选择其它版本，后续需手动填写 Docker 镜像地址"
+else
+    echo "    使用 Python ${PYTHON_VERSION}"
+fi
+
+# ---------------------------------------------------------------------------
+# 交互 5：确认 / 修改 Docker 镜像（仅用于构建下载依赖，不是运行时镜像）
+# ---------------------------------------------------------------------------
+if ${CUSTOM_IMAGE}; then
+    DEFAULT_IMAGE=""
+else
+    DEFAULT_IMAGE="apaas-registry.cn-hangzhou.cr.aliyuncs.com/agentrun/python:${PYTHON_VERSION}-slim_${TARGET_ARCH}"
+fi
 
 echo ""
 echo "── Docker 构建镜像（仅用于下载安装依赖包，非运行时镜像）──"
-echo "    ${DEFAULT_IMAGE}"
+if [[ -n "${DEFAULT_IMAGE}" ]]; then
+    echo "    ${DEFAULT_IMAGE}"
+else
+    echo "    （请填写 Docker 镜像地址）"
+fi
 echo "────────────────────────────────────────────────────"
-printf "回车确认，或输入新镜像名: "
+if [[ -n "${DEFAULT_IMAGE}" ]]; then
+    printf "回车确认，或输入新镜像名: "
+else
+    printf "请输入 Docker 镜像地址: "
+fi
 read -r user_image_input
 
 PYTHON_IMAGE="${user_image_input:-${DEFAULT_IMAGE}}"
+if [[ -z "${PYTHON_IMAGE}" ]]; then
+    echo "错误: 必须指定 Docker 镜像地址，退出。"; exit 1
+fi
 echo "    使用镜像: ${PYTHON_IMAGE}"
 
 # ---------------------------------------------------------------------------
-# 交互 5：确认 / 修改 pip 镜像源
+# 交互 6：确认 / 修改 pip 镜像源
 # ---------------------------------------------------------------------------
 DEFAULT_PIP_INDEX="https://mirrors.aliyun.com/pypi/simple/"
 

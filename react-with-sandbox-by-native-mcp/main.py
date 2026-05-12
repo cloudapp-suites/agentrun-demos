@@ -68,7 +68,7 @@ def _build_headers(token: str) -> dict[str, str]:
     """生成请求头，每次调用产生新的 session-id 保证会话隔离。"""
     return {
         "x-agentrun-session-id": str(uuid.uuid4()),
-        "Authorization": f"bearer {token}",
+        "Authorization": f"Bearer {token}",
     }
 
 
@@ -250,7 +250,7 @@ def _parse_args() -> argparse.Namespace:
     p.add_argument(
         "--token",
         default=DEFAULT_TOKEN,
-        help="鉴权 token（写入 Authorization: bearer <token>）",
+        help="鉴权 token（写入 Authorization: Bearer <token>）",
     )
     p.add_argument(
         "--provider",
