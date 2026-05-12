@@ -2,6 +2,45 @@
 
 基于 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) 的多语言代码执行服务，支持 **streamable HTTP** 协议。
 
+> ⚠️ 这是一个教学 Demo，非生产级代码执行服务。如需生产使用，请在沙箱环境中运行并加访问控制。
+
+## Quick Start
+
+```bash
+# 安装依赖
+npm install
+
+# 启动服务（开发模式，tsx 直接运行无需构建）
+npm run dev
+```
+
+### 测试客户端
+
+`example_client.py` 是一个基于 [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk) 的示例客户端，依次调用 `execute_code` 工具执行 Python / JavaScript / TypeScript / Shell / Java 代码。
+
+```bash
+# 安装 MCP Python SDK
+pip install mcp
+
+# 连接本地服务（默认 http://localhost:80/mcp）
+python example_client.py
+
+# 指定 endpoint
+python example_client.py --endpoint http://localhost:80/mcp
+
+# 指定 endpoint + token
+python example_client.py --endpoint https://mcp.example.com/mcp --token <bearer-token>
+
+# 指定 session-id（默认自动生成 UUID）
+python example_client.py --endpoint https://mcp.example.com/mcp --token <bearer-token> --session-id <uuid>
+```
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `--endpoint` | MCP 服务地址 | `$MCP_URL` 或 `http://localhost:80/mcp` |
+| `--token` | Bearer Token，附加到 `Authorization` 请求头 | 无 |
+| `--session-id` | `x-agentrun-session-id` 请求头的值 | 自动生成 UUID |
+
 ## 你将学到什么
 
 通过阅读和运行本 Demo，你可以了解：
@@ -23,40 +62,6 @@
    - 不同语言的临时文件创建与命令构造策略
    - 子进程超时控制与资源清理
 3. **`hooks.js`** — 用户自定义钩子，了解 pre/post hook 的调用时机与参数结构
-
-## 测试：example_client.py
-
-`example_client.py` 是一个基于 [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk) 的示例客户端，依次调用 `execute_code` 工具执行 Python / JavaScript / TypeScript / Shell / Java 代码。
-
-### 安装依赖
-
-```bash
-pip install mcp
-```
-
-### 用法
-
-```bash
-# 连接本地服务（默认 http://localhost:80/mcp）
-python example_client.py
-
-# 指定 endpoint
-python example_client.py --endpoint http://localhost:80/mcp
-
-# 指定 endpoint + token
-python example_client.py --endpoint https://mcp.example.com/mcp --token <bearer-token>
-
-# 指定 session-id（默认自动生成 UUID）
-python example_client.py --endpoint https://mcp.example.com/mcp --token <bearer-token> --session-id <uuid>
-```
-
-### 参数
-
-| 参数 | 说明 | 默认值 |
-|------|------|--------|
-| `--endpoint` | MCP 服务地址 | `$MCP_URL` 或 `http://localhost:80/mcp` |
-| `--token` | Bearer Token，附加到 `Authorization` 请求头 | 无 |
-| `--session-id` | `x-agentrun-session-id` 请求头的值 | 自动生成 UUID |
 
 ---
 
@@ -146,20 +151,47 @@ export async function post_hook(ctx, result) {
 
 ---
 
-## 本地开发
+## Docker 部署
+
+### 构建与运行
 
 ```bash
-# 安装依赖
-npm install
-
-# 开发模式（tsx 直接运行，无需构建）
-npm run dev
-
-# 构建
+# 构建 TypeScript
 npm run build
 
-# 运行构建产物
+# 直接运行构建产物
 npm start
+```
+
+### 构建镜像
+
+```bash
+# 构建并推送多架构镜像（amd64 + arm64）
+chmod +x build_image.sh
+./build_image.sh
+
+# 指定 tag
+./build_image.sh -t v1.0.0
+
+# 指定仓库
+./build_image.sh -r registry.example.com/myns -n code-exec-mcp -t v1.0.0
+```
+
+### 运行
+
+```bash
+docker run -d --name code-exec-mcp \
+  -p 80:80 \
+  registry.example.com/myns/code-exec-mcp:latest
+```
+
+### 挂载自定义 hooks.js
+
+```bash
+docker run -d --name code-exec-mcp \
+  -p 80:80 \
+  -v $(pwd)/hooks.js:/app/hooks.js:ro \
+  registry.example.com/myns/code-exec-mcp:latest
 ```
 
 ---
@@ -193,46 +225,6 @@ Hello, World!
 exit_code: 0
 execution_time: 123ms
 ```
-
----
-
-## Docker 部署
-
-### 构建镜像
-
-```bash
-# 先构建 TypeScript
-npm run build
-
-# 构建并推送多架构镜像（amd64 + arm64）
-chmod +x build_image.sh
-./build_image.sh
-
-# 指定 tag
-./build_image.sh -t v1.0.0
-
-# 指定仓库
-./build_image.sh -r registry.example.com/myns -n code-exec-mcp -t v1.0.0
-```
-
-### 运行
-
-```bash
-docker run -d --name code-exec-mcp \
-  -p 80:80 \
-  registry.example.com/myns/code-exec-mcp:latest
-```
-
-### 挂载自定义 hooks.js
-
-```bash
-docker run -d --name code-exec-mcp \
-  -p 80:80 \
-  -v $(pwd)/hooks.js:/app/hooks.js:ro \
-  registry.example.com/myns/code-exec-mcp:latest
-```
-
----
 
 ## MCP 客户端配置
 

@@ -112,8 +112,7 @@ def _make_generate_download_url(session_id: str) -> Callable:
     def generate_download_url(path: str) -> ToolResponse:
         """为沙箱内的文件生成签名下载链接，有效期 7 天。
 
-        每当你在沙箱中生成了用户需要的文件（PDF、Excel、图片等），
-        必须调用此工具获取下载链接，并在回复中以 Markdown 链接形式提供给用户。
+        适用于沙箱中用户可能需要访问的文件。
 
         Args:
             path: 沙箱内文件的绝对路径，例如 /workspace/output/report.pdf
@@ -123,7 +122,8 @@ def _make_generate_download_url(session_id: str) -> Callable:
         """
         endpoint = _get_endpoint()
         token = _create_download_token(session_id)
-        url = f"{endpoint}/download?token={token}&path={path}"
+        from urllib.parse import quote
+        url = f"{endpoint}/download?token={token}&path={quote(path, safe='/')}"
         return ToolResponse(content=[TextBlock(type="text", text=url)])
 
     return generate_download_url
@@ -233,6 +233,7 @@ def _verify_download_token(token: str) -> str | None:
             hashlib.sha256,
         ).hexdigest()
         if not hmac.compare_digest(sig, expected):
+            logger.warning("下载 token 签名不匹配  expected=%s  actual=%s", expected, sig)
             return None
         # 补齐 base64 padding
         pad = 4 - len(payload_b64) % 4
@@ -240,9 +241,11 @@ def _verify_download_token(token: str) -> str | None:
             payload_b64 += "=" * pad
         payload = json.loads(base64.urlsafe_b64decode(payload_b64))
         if payload["exp"] < time.time():
+            logger.warning("下载 token 已过期  exp=%s  now=%s", payload["exp"], time.time())
             return None
         return payload["sid"]
-    except Exception:
+    except Exception as exc:
+        logger.warning("下载 token 解析失败  token=%s  error=%s", token[:50], exc)
         return None
 
 
@@ -714,6 +717,7 @@ async def _init_session(session_id: str, sandbox_service: SandboxService) -> Ses
             f"session_id={session_id}  template={SANDBOX_TEMPLATE_NAME}"
         )
     sandbox = sandboxes[0]
+    await sandbox.start_async()
     logger.info("  [1/4] 沙箱已就绪  sandbox_id=%s", sandbox.sandbox_id)
 
     logger.info("  [2/4] 上传 skills 到沙箱  dest=%s", SANDBOX_SKILLS_DIR)
@@ -855,10 +859,21 @@ async def download_file(
     filename = Path(path).name
     logger.info("下载沙箱文件  session_id=%s  path=%s  mime=%s", session_id, path, mime)
 
+    # RFC 5987: 中文文件名需用 filename*=UTF-8''... 编码，否则 latin-1 报错
+    from urllib.parse import quote
+    encoded_filename = quote(filename, safe='')
+    # 纯 ASCII 文件名直接用 filename=，含非 ASCII 字符则只用 filename*=
+    try:
+        filename.encode("ascii")
+    except UnicodeEncodeError:
+        content_disposition = f"attachment; filename*=UTF-8''{encoded_filename}"
+    else:
+        content_disposition = f'attachment; filename="{filename}"'
+
     return StreamingResponse(
         file_stream,
         media_type=mime or "application/octet-stream",
-        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        headers={"Content-Disposition": content_disposition},
     )
 
 

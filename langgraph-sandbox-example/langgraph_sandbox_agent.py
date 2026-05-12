@@ -25,8 +25,11 @@ from langchain_openai import ChatOpenAI
 
 # 过滤 LangGraph deprecation 警告，create_react_agent 仍是推荐用法
 # langchain.agents.create_agent 尚未稳定
-from langgraph.warnings import LangGraphDeprecatedSinceV10
-warnings.filterwarnings("ignore", category=LangGraphDeprecatedSinceV10)
+try:
+    from langgraph.warnings import LangGraphDeprecatedSinceV10
+    warnings.filterwarnings("ignore", category=LangGraphDeprecatedSinceV10)
+except ImportError:
+    pass
 
 from langgraph.prebuilt import create_react_agent
 

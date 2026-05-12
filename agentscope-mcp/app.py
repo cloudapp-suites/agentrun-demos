@@ -188,7 +188,7 @@ def _build_headers(server_cfg: MCPServerConfig, session_id: str) -> dict[str, st
     """
     headers: dict[str, str] = {"x-agentrun-session-id": session_id}
     if server_cfg.token:
-        headers["Authorization"] = f"bearer {server_cfg.token}"
+        headers["Authorization"] = f"Bearer {server_cfg.token}"
     headers.update(server_cfg.extra_headers)
     return headers
 

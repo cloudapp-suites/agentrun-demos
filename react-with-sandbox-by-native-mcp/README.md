@@ -30,7 +30,7 @@
   ├─ HttpStatefulClient.connect()    # 直接建立 streamable-HTTP 长连接
   │     请求头携带：
   │       x-agentrun-session-id: <UUID>   ← 标识一个独占沙箱会话
-  │       Authorization: bearer <token>
+  │       Authorization: Bearer <token>
   │
   ├─ list_tools() / call_tool()      # 标准 MCP 协议调用，无需沙箱专属 SDK
   └─ HttpStatefulClient.close()
@@ -80,7 +80,7 @@ pip install -r requirements.txt
 | 参数 | 说明 | 默认值 |
 |------|------|--------|
 | `--url` | 远程 MCP Server 地址（streamable-HTTP 端点），**必填** | 无 |
-| `--token` | 鉴权 token，写入 `Authorization: bearer <token>` | 空字符串 |
+| `--token` | 鉴权 token，写入 `Authorization: Bearer <token>` | 空字符串 |
 | `--provider` | 模型 provider：`openai` 或 `dashscope` | `openai` |
 | `--model` | 模型名称，与 `--provider` 搭配使用 | `qwen-plus` |
 | `--task` | 单次任务描述，不填则进入交互模式 | 无 |
@@ -148,7 +148,7 @@ main.py
   ├─ HttpStatefulClient.connect()            # 建立 streamable-HTTP 长连接
   │     所有请求均携带：
   │       x-agentrun-session-id: <UUID>
-  │       Authorization: bearer <token>
+  │       Authorization: Bearer <token>
   │
   ├─ list_tools()                            # 动态发现沙箱暴露的 MCP 工具
   ├─ Toolkit.register_mcp_client()           # 注册到 AgentScope Toolkit
