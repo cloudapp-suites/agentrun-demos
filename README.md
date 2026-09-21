@@ -24,10 +24,8 @@
 
 | 目录 | 说明 |
 |------|------|
-| [openclaw-unified-sandbox](openclaw-unified-sandbox/) | OpenClaw + 统一沙箱后端（E2B / AgentScope 运行时切换） |
-| [openclaw-agentscope-integration](openclaw-agentscope-integration/) | OpenClaw + AgentScope 沙箱集成 |
-| [openclaw-e2b-integration](openclaw-e2b-integration/) | OpenClaw + E2B 沙箱集成 |
-| [copaw-unified-sandbox](copaw-unified-sandbox/) | CoPaw + 统一沙箱后端（E2B / AgentScope 运行时切换） |
+| [openclaw-skill-demo](openclaw-skill-demo/) | OpenClaw 使用「技能」集成平台沙箱（allinone / e2b） |
+| [qwenpaw-skill-demo](qwenpaw-skill-demo/) | QwenPaw 使用「技能」集成平台沙箱（allinone / e2b） |
 | [dify-e2b-integration](dify-e2b-integration/) | Dify + E2B 沙箱集成（Dify 插件方式） |
 
 ### 工具与文档
