@@ -1,0 +1,92 @@
+apiVersion: agentruntime.alibabacloud.com/v1beta1
+kind: Agent
+metadata:
+  name: qwenpaw-skill-demo
+  namespace: default   # 示例命名空间，按实际环境调整
+  annotations:
+    # 平台不鉴权（控制台「身份」页签设置；网关放行匿名访问，直接打开 Agent UI）
+    agentruntime.alibabacloud.com/access-mode: AllowAnonymous
+spec:
+  type: managed
+  showName: QwenPaw (Skill Sandbox)
+  template:
+    spec:
+      containerConcurrency: 100
+      image: apaas-registry.cn-hangzhou.cr.aliyuncs.com/agentrun-test/qwenpaw-agentscope:latest
+      imagePullPolicy: Always
+      imagePullSecrets:
+      - name: imagepull-acebaaa8e025de84
+      isolation: isolated   # 独占模式：每会话一个独享实例，入口为 <独占id>.<agent名>.<ns>.<域名>（详见 README「独占模式说明」）
+      ports:
+      - containerPort: 8088
+        protocol: TCP
+      env:
+        # ── QwenPaw 运行时配置 ──
+        - name: QWENPAW_WORKING_DIR
+          value: /app/working
+        - name: QWENPAW_SECRET_DIR
+          value: /app/working.secret
+        - name: QWENPAW_RUNNING_IN_CONTAINER
+          value: "1"
+        - name: QWENPAW_PORT
+          value: "8088"
+
+        # ── LLM Provider（entrypoint 自动写入 Provider 配置）──
+        # LLM_API_KEY 请替换为真实 Key；生产建议用 Secret + valueFrom.secretKeyRef 引用
+        - name: LLM_BASE_URL
+          value: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+        - name: LLM_API_KEY
+          value: "<YOUR_LLM_API_KEY>"
+        - name: LLM_MODEL
+          value: "qwen3.8-flash"
+
+        # ── Console 登录认证（单用户；不设置则界面无需登录）──
+        # 密码请替换为真实值；开启后探针需走容器内 loopback 调用（见下方 exec 探针）
+        - name: QWENPAW_AUTH_ENABLED
+          value: "true"
+        - name: QWENPAW_AUTH_USERNAME
+          value: "admin"
+        - name: QWENPAW_AUTH_PASSWORD
+          value: "<YOUR_UI_PASSWORD>"
+
+        # ── 沙箱：通过平台「技能」集成（上传技能包），不做 code-level 路由 ──
+
+      scaling:
+        minReplicas: 1
+        maxReplicas: 5
+        scaleDownDelaySeconds: 300
+        scaleToZeroRetentionSeconds: 1800
+        terminationGracePeriodSeconds: 60
+
+      # 探针说明：开启 QWENPAW_AUTH_ENABLED 后 /api/healthz 需要认证，
+      # 容器内 loopback 访问在认证豁免名单（allow_no_auth_hosts 默认含 127.0.0.1）
+      livenessProbe:
+        failureThreshold: 30
+        exec:
+          command:
+          - /bin/sh
+          - -c
+          - curl -fsS http://127.0.0.1:8088/api/healthz
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+
+      readinessProbe:
+        failureThreshold: 10
+        exec:
+          command:
+          - /bin/sh
+          - -c
+          - curl -fsS http://127.0.0.1:8088/api/healthz
+        periodSeconds: 3
+        successThreshold: 1
+        timeoutSeconds: 5
+
+      resources:
+        requests:
+          cpu: 500m
+          memory: 1Gi
+        limits:
+          cpu: "2"
+          memory: 4096Mi
+          ephemeral-storage: 1Gi

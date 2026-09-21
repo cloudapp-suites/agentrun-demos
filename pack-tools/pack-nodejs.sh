@@ -98,8 +98,8 @@ OUTPUT_DIR="${OUTPUT_DIR:-"${SRC_DIR}/.."}"
 OUTPUT_DIR="$(cd "${OUTPUT_DIR}" && pwd)"
 
 case "${TARGET_ARCH}" in
-    amd64|x86_64)  DOCKER_PLATFORM="linux/amd64"; NODE_TAG="20-slim_amd64" ;;
-    arm64|aarch64) DOCKER_PLATFORM="linux/arm64"; NODE_TAG="20-slim_arm64" ;;
+    amd64|x86_64)  DOCKER_PLATFORM="linux/amd64" ;;
+    arm64|aarch64) DOCKER_PLATFORM="linux/arm64" ;;
     *)
         echo "错误: 不支持的目标架构 '${TARGET_ARCH}'，请使用 amd64 或 arm64"
         exit 1
@@ -226,7 +226,7 @@ fi
 # ---------------------------------------------------------------------------
 # 交互 4：确认 / 修改 Docker 镜像（仅用于安装 npm 依赖，非运行时镜像）
 # ---------------------------------------------------------------------------
-DEFAULT_IMAGE="apaas-registry.cn-hangzhou.cr.aliyuncs.com/agentrun/node:${NODE_TAG}"
+DEFAULT_IMAGE="apaas-registry.cn-hangzhou.cr.aliyuncs.com/agentrun/nodejs-base:20"
 
 echo ""
 echo "── Docker 构建镜像（仅用于安装 npm 依赖，非运行时镜像）──────────"

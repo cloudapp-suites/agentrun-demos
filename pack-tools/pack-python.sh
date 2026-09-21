@@ -302,7 +302,7 @@ fi
 if ${CUSTOM_IMAGE}; then
     DEFAULT_IMAGE=""
 else
-    DEFAULT_IMAGE="apaas-registry.cn-hangzhou.cr.aliyuncs.com/agentrun/python:${PYTHON_VERSION}-slim_${TARGET_ARCH}"
+    DEFAULT_IMAGE="apaas-registry.cn-hangzhou.cr.aliyuncs.com/agentrun/python-base:${PYTHON_VERSION}"
 fi
 
 echo ""

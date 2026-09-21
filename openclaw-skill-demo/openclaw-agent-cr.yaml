@@ -1,0 +1,87 @@
+apiVersion: agentruntime.alibabacloud.com/v1beta1
+kind: Agent
+metadata:
+  name: openclaw-skill-demo
+  namespace: default   # 示例命名空间，按实际环境调整
+  annotations:
+    # 平台不鉴权（控制台「身份」页签设置；网关放行匿名访问，可直接打开 Control UI）
+    agentruntime.alibabacloud.com/access-mode: AllowAnonymous
+spec:
+  type: managed
+  showName: OpenClaw (Skill Sandbox)
+  template:
+    spec:
+      containerConcurrency: 100
+      # 公开可读镜像（匿名可拉取，无需 imagePullSecrets）
+      image: apaas-registry.cn-hangzhou.cr.aliyuncs.com/agentrun/openclaw-skill:2026.9.5
+      imagePullPolicy: Always
+      isolation: isolated   # 独占模式：每会话一个独享实例，入口为 <独占id>.<agent名>.<ns>.<域名>（详见 README「独占模式说明」）
+      ports:
+      - containerPort: 18789
+        protocol: TCP
+      env:
+        # ── OpenClaw 运行时路径 ──
+        - name: OPENCLAW_STATE_DIR
+          value: /home/node/.openclaw
+        - name: OPENCLAW_CONFIG_PATH
+          value: /home/node/.openclaw/openclaw.json
+        - name: OPENCLAW_WORKSPACE_DIR
+          value: /home/node/.openclaw/workspace
+        - name: OPENCLAW_GATEWAY_PORT
+          value: "18789"
+
+        # ── LLM Provider（entrypoint 写入 openclaw.json 的 models.providers）──
+        # LLM_API_KEY 请替换为真实 Key；生产建议用 Secret + valueFrom.secretKeyRef 引用
+        - name: LLM_BASE_URL
+          value: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+        - name: LLM_API_KEY
+          value: "<YOUR_LLM_API_KEY>"
+        - name: LLM_MODEL
+          value: "qwen3.8-flash"
+
+        # ── Gateway 访问 ──
+        # Control UI 连接时需要该 token（Settings → Gateway secret）
+        - name: OPENCLAW_GATEWAY_TOKEN
+          value: "demo-token-openclaw-skill"
+        # 可信代理来源：平台在同一个 Pod 内以 loopback 转发（携带 X-Forwarded-*），
+        # 因此声明 127.0.0.1 即可；如转发来源不同，按实际调整
+        - name: OPENCLAW_TRUSTED_PROXIES
+          value: "127.0.0.1"
+        # 独占模式下访问域名随会话 ID 变化，无需（也无法）配置 OPENCLAW_UI_ORIGIN：
+        # entrypoint 会自动启用 Host 头 Origin 校验（Origin 必须与访问 Host 一致）
+
+      scaling:
+        # 独占模式：每个会话一个独立 Pod，平台按访问冷启动（min 固定视为 0）；
+        # maxReplicas 限制并发会话数
+        minReplicas: 0
+        maxReplicas: 5
+        scaleDownDelaySeconds: 300
+        scaleToZeroRetentionSeconds: 1800
+        terminationGracePeriodSeconds: 60
+
+      livenessProbe:
+        failureThreshold: 30
+        httpGet:
+          path: /healthz
+          port: 18789
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+
+      readinessProbe:
+        failureThreshold: 20
+        httpGet:
+          path: /startupz
+          port: 18789
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 5
+
+      resources:
+        requests:
+          cpu: 500m
+          memory: 1Gi
+        limits:
+          cpu: "2"
+          memory: 4096Mi
+          ephemeral-storage: 2Gi
