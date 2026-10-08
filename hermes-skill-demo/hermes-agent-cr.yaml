@@ -1,0 +1,94 @@
+apiVersion: agentruntime.alibabacloud.com/v1beta1
+kind: Agent
+metadata:
+  name: hermes-skill-demo
+  namespace: default   # 示例命名空间，按实际环境调整
+  annotations:
+    # 平台不鉴权（控制台「身份」页签设置；网关放行匿名访问，可直接打开 Hermes Dashboard）
+    # Dashboard 自身的登录认证（basic auth）仍然生效，见下方环境变量
+    agentruntime.alibabacloud.com/access-mode: AllowAnonymous
+spec:
+  type: managed
+  showName: Hermes (Skill Sandbox)
+  template:
+    spec:
+      containerConcurrency: 100
+      # 公开可读镜像（匿名可拉取，无需 imagePullSecrets）；本目录 Dockerfile 构建的薄包装镜像（重构建命令见 README 文末）
+      image: apaas-registry.cn-hangzhou.cr.aliyuncs.com/agentrun/hermes-skill:v2026.9.24
+      imagePullPolicy: Always
+      isolation: isolated   # 独占模式：每会话一个独享实例，入口为 <独占id>.<agent名>.<ns>.<域名>（详见 README「独占模式说明」）
+      ports:
+      - containerPort: 9119   # Hermes Dashboard（平台入口；API Server 8642 仅容器内使用）
+        protocol: TCP
+      env:
+        # ── LLM Provider（entrypoint 写入 $HERMES_HOME/config.yaml）──
+        # LLM_API_KEY 请替换为真实 Key；生产建议用 Secret + valueFrom.secretKeyRef 引用
+        - name: LLM_BASE_URL
+          value: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+        - name: LLM_API_KEY
+          value: "<YOUR_LLM_API_KEY>"
+        - name: LLM_MODEL
+          value: "qwen3.8-flash"
+
+        # ── Dashboard（浏览器入口，容器内 0.0.0.0:9119）──
+        - name: HERMES_DASHBOARD
+          value: "1"
+        # 非回环绑定必须配置认证，否则 Dashboard 拒绝启动（fail closed）
+        - name: HERMES_DASHBOARD_BASIC_AUTH_USERNAME
+          value: "admin"
+        - name: HERMES_DASHBOARD_BASIC_AUTH_PASSWORD
+          value: "<YOUR_DASHBOARD_PASSWORD>"
+        # 会话签名密钥（openssl rand -hex 32），保证重启后登录态稳定
+        - name: HERMES_DASHBOARD_BASIC_AUTH_SECRET
+          value: "<YOUR_SESSION_SECRET>"
+
+        # ── API Server（OpenAI 兼容 /v1/chat/completions 与 /health；Dashboard 聊天依赖它）──
+        - name: API_SERVER_ENABLED
+          value: "true"
+        - name: API_SERVER_HOST
+          value: "0.0.0.0"
+        # 容器内客户端调用 /v1/chat/completions 时的 Bearer Key（≥8 字符）
+        - name: API_SERVER_KEY
+          value: "<YOUR_API_SERVER_KEY>"
+
+      scaling:
+        # 独占模式：每个会话一个独立 Pod，平台按访问冷启动（min 固定视为 0）；
+        # maxReplicas 限制并发会话数
+        minReplicas: 0
+        maxReplicas: 5
+        scaleDownDelaySeconds: 300
+        scaleToZeroRetentionSeconds: 1800
+        terminationGracePeriodSeconds: 60
+
+      # 探针走容器内 loopback 调 API Server 的 /health
+      # （Dashboard 端口有登录认证，不适合直接做 HTTP 探针）
+      livenessProbe:
+        failureThreshold: 30
+        exec:
+          command:
+          - /bin/sh
+          - -c
+          - curl -fsS http://127.0.0.1:8642/health
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+
+      readinessProbe:
+        failureThreshold: 20
+        exec:
+          command:
+          - /bin/sh
+          - -c
+          - curl -fsS http://127.0.0.1:8642/health
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 5
+
+      resources:
+        requests:
+          cpu: 500m
+          memory: 1Gi
+        limits:
+          cpu: "2"
+          memory: 4096Mi
+          ephemeral-storage: 2Gi

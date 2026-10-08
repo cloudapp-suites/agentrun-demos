@@ -25,7 +25,7 @@ Agent Runtime 平台的集成文档，涵盖 Agent 和 ToolServer 的接入方�
 | [agentscope-runtime](toolserver/code/agentscope-runtime.md) | 基于 agentscope-runtime SDK 开发 ToolServer |
 | [e2b](toolserver/code/e2b.md) | E2B 兼容沙箱 ToolServer |
 | [langgraph](toolserver/code/langgraph.md) | LangGraph 集成 ToolServer |
-| [claw-skill-integration](toolserver/code/claw-skill-integration.md) | Claw 类 Agent（OpenClaw / QwenPaw）技能方式集成沙箱 |
+| [claw-skill-integration](toolserver/code/claw-skill-integration.md) | Agent 框架（OpenClaw / QwenPaw / Hermes）技能方式集成沙箱 |
 
 ### MCP 方式
 

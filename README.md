@@ -26,6 +26,7 @@
 |------|------|
 | [openclaw-skill-demo](openclaw-skill-demo/) | OpenClaw 使用「技能」集成平台沙箱（allinone / e2b） |
 | [qwenpaw-skill-demo](qwenpaw-skill-demo/) | QwenPaw 使用「技能」集成平台沙箱（allinone / e2b） |
+| [hermes-skill-demo](hermes-skill-demo/) | Hermes 使用「技能」集成平台沙箱（allinone / e2b） |
 | [dify-e2b-integration](dify-e2b-integration/) | Dify + E2B 沙箱集成（Dify 插件方式） |
 
 ### 工具与文档
