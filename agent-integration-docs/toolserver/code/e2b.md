@@ -2,7 +2,7 @@
 
 平台提供 E2B 兼容的沙箱服务，每个沙箱是独立的 K8s Pod，支持代码执行、文件操作和进程管理。
 
-> 如需了解 Claw 类 Agent 框架（OpenClaw、QwenPaw 等）如何通过技能调用沙箱，请参阅 claw-skill-integration.md。
+> 如需了解 Agent 框架（OpenClaw、QwenPaw、Hermes 等）如何通过技能调用沙箱，请参阅 claw-skill-integration.md。
 
 ---
 
