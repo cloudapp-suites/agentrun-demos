@@ -1,4 +1,6 @@
 langgraph==1.1.10
 langchain==1.2.17
 langchain-openai==1.2.1
+# OpenAI SDK（langchain-openai 的传递依赖；1.2.1 要求 openai>=2.26.0,<3.0.0，取最低满足版本固化）
+openai==2.26.0
 agentscope-runtime==1.1.0
