@@ -6,6 +6,9 @@ agentscope==1.0.16
 # AgentScope Runtime — web 服务层（AgentApp、Runner、协议适配器等）
 agentscope-runtime==1.1.0
 
+# OpenAI SDK（agentscope / agentscope-runtime 的传递依赖，显式固化）
+openai==2.15.0
+
 # MCP and a2a
 mcp==1.26.0
 a2a-sdk==0.3.22

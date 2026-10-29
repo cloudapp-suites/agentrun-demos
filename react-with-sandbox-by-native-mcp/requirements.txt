@@ -1,4 +1,6 @@
 agentscope==1.0.16
+# OpenAI SDK（agentscope 的传递依赖，显式固化）
+openai==2.15.0
 mcp==1.26.0
 httpx==0.27.1
 prompt-toolkit==3.0.0
